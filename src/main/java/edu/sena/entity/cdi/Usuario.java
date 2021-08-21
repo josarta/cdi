@@ -63,6 +63,9 @@ public class Usuario implements Serializable {
     private String usuDireccion;
     @Column(name = "usu_estado")
     private Short usuEstado;
+    @Size(max = 255)
+    @Column(name = "usu_foto")
+    private String usuFoto;
     @ManyToMany(mappedBy = "usuarioCollection", fetch = FetchType.LAZY)
     private Collection<Rol> rolCollection;
     @OneToMany(mappedBy = "fkOperario", fetch = FetchType.LAZY)
@@ -161,6 +164,14 @@ public class Usuario implements Serializable {
         this.usuEstado = usuEstado;
     }
 
+    public String getUsuFoto() {
+        return usuFoto;
+    }
+
+    public void setUsuFoto(String usuFoto) {
+        this.usuFoto = usuFoto;
+    }
+
     public Collection<Rol> getRolCollection() {
         return rolCollection;
     }
@@ -225,5 +236,5 @@ public class Usuario implements Serializable {
     public String toString() {
         return "edu.sena.entity.cdi.Usuario[ usuUsuarioid=" + usuUsuarioid + " ]";
     }
-    
+
 }

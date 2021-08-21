@@ -29,5 +29,11 @@ public interface BodegaFacadeLocal {
     List<Bodega> findRange(int[] range);
 
     int count();
+
+    public List<Bodega> leertodos();
+
+    public boolean crearBodega(String bod_nombre, String bod_direccion, String bod_telefono);
+
+    public boolean eliminarBodega(int bod_id);
     
 }

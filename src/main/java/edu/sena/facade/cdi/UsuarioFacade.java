@@ -34,6 +34,7 @@ public class UsuarioFacade extends AbstractFacade<Usuario> implements UsuarioFac
     @Override
     public Usuario validarUsuario(String correoIn, String claveIn) {
         try {
+            em.getEntityManagerFactory().getCache().evictAll();
             Query qt = em.createQuery("SELECT u FROM Usuario u WHERE u.usuCorreo = :correoIn AND u.usuClave = :claveIn");
             qt.setParameter("correoIn", correoIn);
             qt.setParameter("claveIn", claveIn);

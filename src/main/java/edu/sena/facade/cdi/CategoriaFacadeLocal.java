@@ -29,5 +29,11 @@ public interface CategoriaFacadeLocal {
     List<Categoria> findRange(int[] range);
 
     int count();
+
+    public List<Categoria> leertodos();
+
+    public boolean crearCategoria(String cat_nombre, String cat_descripcion);
+
+    public boolean eliminarCategoria(int cat_id);
     
 }

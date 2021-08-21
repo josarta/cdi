@@ -8,15 +8,23 @@ package edu.sena.controlador.cdi;
 import edu.sena.entity.cdi.Usuario;
 import edu.sena.facade.cdi.UsuarioFacadeLocal;
 import edu.sena.utilidades.cdi.Mail;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.Part;
 import org.primefaces.PrimeFaces;
+import org.primefaces.shaded.commons.io.FilenameUtils;
 
 /**
  *
@@ -34,6 +42,8 @@ public class UsuarioSesion implements Serializable {
     private Usuario usuReg = new Usuario();
     private Usuario usuLog = new Usuario();
     private Usuario usuTemporal = new Usuario();
+    private Part archivoFoto;
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 
     public UsuarioSesion() {
     }
@@ -56,7 +66,7 @@ public class UsuarioSesion implements Serializable {
             FacesContext fc = FacesContext.getCurrentInstance();
             fc.getExternalContext().invalidateSession();
             fc.getExternalContext().redirect("../index.xhtml");
-        } 
+        }
     }
 
     public void validarUsuario() {
@@ -99,17 +109,15 @@ public class UsuarioSesion implements Serializable {
         try {
             usuReg = usuarioFacadeLocal.recuperarClave(correoIn);
             if (usuReg != null) {
-                
-                Mail.recuperarClaves(usuReg.getUsuNombres() + usuReg.getUsuApellidos()  ,usuReg.getUsuCorreo()  , usuReg.getUsuClave() );
-              PrimeFaces.current().executeScript("Swal.fire({"
+
+                Mail.recuperarClaves(usuReg.getUsuNombres() + usuReg.getUsuApellidos(), usuReg.getUsuCorreo(), usuReg.getUsuClave());
+                PrimeFaces.current().executeScript("Swal.fire({"
                         + "  title: 'Correo de recuperacion  !',"
                         + "  text: 'enviado correctamente',"
                         + "  icon: 'success',"
                         + "  confirmButtonText: 'Ok'"
                         + "})");
-              
-              
-              
+
             } else {
                 PrimeFaces.current().executeScript("Swal.fire({"
                         + "  title: 'Correo electronico !',"
@@ -158,6 +166,80 @@ public class UsuarioSesion implements Serializable {
                     + "  confirmButtonText: 'Ok'"
                     + "})");
         }
+    }
+
+    public void actualizarmisdatos() {
+        try {
+            usuarioFacadeLocal.edit(usuLog);
+            PrimeFaces.current().executeScript("Swal.fire({"
+                    + "  title: 'Usuario !',"
+                    + "  text: 'Actualizado correctamente',"
+                    + "  icon: 'success',"
+                    + "  confirmButtonText: 'Ok'"
+                    + "})");
+
+        } catch (Exception e) {
+            PrimeFaces.current().executeScript("Swal.fire({"
+                    + "  title: 'Problemas !',"
+                    + "  text: 'No se puede realizar esta accion',"
+                    + "  icon: 'error',"
+                    + "  confirmButtonText: 'Ok'"
+                    + "})");
+        }
+    }
+
+    public void cargarFotoPerfil() {
+        if (archivoFoto != null) {
+            if (archivoFoto.getSize() > 700000 || archivoFoto.getSize() < 10000  ) {
+                PrimeFaces.current().executeScript("Swal.fire({"
+                        + "  title: 'El archivo !',"
+                        + "  text: 'No se puede cargar por el tamaño !!!',"
+                        + "  icon: 'error',"
+                        + "  confirmButtonText: 'Ok'"
+                        + "})");
+            } else if (archivoFoto.getContentType().equalsIgnoreCase("image/png") || archivoFoto.getContentType().equalsIgnoreCase("image/jpeg")) {
+               
+                
+                try (InputStream is = archivoFoto.getInputStream()) {
+                    File carpeta = new File("C:\\cdi\\usuarios\\fotoperfil");
+                    if (!carpeta.exists()) {
+                     carpeta.mkdirs();
+                    }
+                    Calendar hoy = Calendar.getInstance();
+                    String nuevoNombre = sdf.format(hoy.getTime())+".";
+                    nuevoNombre += FilenameUtils.getExtension(archivoFoto.getSubmittedFileName());
+                    Files.copy(is, (new File(carpeta,nuevoNombre)).toPath(),StandardCopyOption.REPLACE_EXISTING);
+                    usuLog.setUsuFoto(nuevoNombre);
+                    usuarioFacadeLocal.edit(usuLog);                  
+                    
+                } catch (Exception e) {
+                    PrimeFaces.current().executeScript("Swal.fire({"
+                            + "  title: 'Problemas !',"
+                            + "  text: 'No se puede realizar esta accion',"
+                            + "  icon: 'error',"
+                            + "  confirmButtonText: 'Ok'"
+                            + "})");
+                }
+            } else {
+                PrimeFaces.current().executeScript("Swal.fire({"
+                        + "  title: 'El archivo !',"
+                        + "  text: 'No es una imagen .png o .jpeg !!!',"
+                        + "  icon: 'error',"
+                        + "  confirmButtonText: 'Ok'"
+                        + "})");
+            }
+
+        } else {
+            PrimeFaces.current().executeScript("Swal.fire({"
+                    + "  title: 'Problemas !',"
+                    + "  text: 'No se puede realizar esta accion',"
+                    + "  icon: 'error',"
+                    + "  confirmButtonText: 'Ok'"
+                    + "})");
+        }
+        
+          PrimeFaces.current().executeScript("document.getElementById('resetform').click()");
+
     }
 
     public void cambiarEstado(Usuario usuIn) {
@@ -235,6 +317,14 @@ public class UsuarioSesion implements Serializable {
 
     public void setUsuTemporal(Usuario usuTemporal) {
         this.usuTemporal = usuTemporal;
+    }
+
+    public Part getArchivoFoto() {
+        return archivoFoto;
+    }
+
+    public void setArchivoFoto(Part archivoFoto) {
+        this.archivoFoto = archivoFoto;
     }
 
 }

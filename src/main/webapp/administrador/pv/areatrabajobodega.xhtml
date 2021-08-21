@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:html5="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:composition>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">${perfil}</h1>
+                        </div><!-- /.col -->
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="#">Inicio</a></li>
+                                <li class="breadcrumb-item active">${perfil}</li>
+                            </ol>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+
+            <!-- Main content -->
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-header border-0">
+                                    <h3 class="card-title">Gestion bodegas</h3>
+                                    <div class="card-tools">
+                                        <a href="#" class="btn btn-tool btn-sm">
+                                            <i data-toggle="modal" data-target="#exampleModal" class="fas fa-ad"></i>
+                                        </a>
+                                        <a href="#" class="btn btn-tool btn-sm">
+                                            <i class="fas fa-bars"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-body table-responsive p-0">
+                                    <table class="table table-striped table-valign-middle">
+                                        <thead>
+                                            <tr>
+                                                <th>Serial</th>
+                                                <th>Nombre</th>
+                                                <th>Direccion</th>
+                                                <th>Telefono</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <h:form>
+                                                <c:forEach items="#{bodegaView.leertodos()}" var="bod">
+
+                                                    <tr>
+                                                        <td>
+                                                            #{bod.bdgBodegaid}
+                                                        </td>
+                                                        <td>
+                                                            #{bod.bdgNombre}
+                                                        </td>
+                                                        <td>
+                                                            #{bod.bdgDireccion}
+                                                        </td>
+                                                        <td>
+                                                            #{bod.bdgTelefono}
+                                                        </td>
+
+                                                        <td>
+                                                            <h:commandButton action="#{bodegaView.eliminarBodega(bod)}" class="btn btn-danger" style="margin-right: 10px;" value="E">
+                                                            </h:commandButton>
+                                                            <h:commandButton html5:data-toggle="modal"
+                                                                             html5:data-target="#exampleModalAct" 
+                                                                             action="#{bodegaView.guardarTemporal(bod)}" 
+                                                                             class="btn btn-success" 
+                                                                             value="AC" >
+                                                                <f:ajax render=":formActualizar"> </f:ajax>
+                                                            </h:commandButton>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>   
+
+                                            </h:form>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                        <!-- /.col-md-6 -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalAct" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Actualizar</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <h:form id="formActualizar">
+                        <div class="modal-body">
+                            <h:inputText value="#{bodegaView.bog_temporal.bdgNombre}" required="true" html5:placeholder="Nombre" class="form-control"/>
+                            <br/>                              
+                            <h:inputText value="#{bodegaView.bog_temporal.bdgDireccion}" required="true" html5:placeholder="Direccion" class="form-control"/>
+                            <br/>
+                            <h:inputText value="#{bodegaView.bog_temporal.bdgTelefono}" required="true" html5:placeholder="Telefono" class="form-control"/>
+                            <br/>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <h:commandButton action="#{bodegaView.editarBodega()}" class="btn btn-primary" value="Registrar.">
+                            </h:commandButton>
+                        </div>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Crear Bodega</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <h:form>
+                        <div class="modal-body">
+                            <h:inputText value="#{bodegaView.bod_nombre}" required="true" html5:placeholder="Nombre" class="form-control"/>
+                            <br/>                              
+                            <h:inputText value="#{bodegaView.bod_direccion}" required="true" html5:placeholder="Direccion" class="form-control"/>
+                            <br/>
+                            <h:inputText value="#{bodegaView.bod_telefono}" required="true" html5:placeholder="Telefono" class="form-control"/>
+                            <br/>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <h:commandButton action="#{bodegaView.crearBodega()}" class="btn btn-primary" value="Crear.">
+                            </h:commandButton>
+                        </div>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </ui:composition>
+</html>
+
