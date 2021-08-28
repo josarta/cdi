@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -49,6 +50,8 @@ public class Producto implements Serializable {
     private Double pdtValorventa;
     @Column(name = "pdt_total")
     private Integer pdtTotal;
+    @ManyToMany(mappedBy = "productoCollection", fetch = FetchType.LAZY)
+    private Collection<Foto> fotoCollection;
     @OneToMany(mappedBy = "fkProducto", fetch = FetchType.LAZY)
     private Collection<OrdencompraProducto> ordencompraProductoCollection;
     @JoinColumn(name = "fk_categoria", referencedColumnName = "cat_categoriaid")
@@ -102,6 +105,14 @@ public class Producto implements Serializable {
 
     public void setPdtTotal(Integer pdtTotal) {
         this.pdtTotal = pdtTotal;
+    }
+
+    public Collection<Foto> getFotoCollection() {
+        return fotoCollection;
+    }
+
+    public void setFotoCollection(Collection<Foto> fotoCollection) {
+        this.fotoCollection = fotoCollection;
     }
 
     public Collection<OrdencompraProducto> getOrdencompraProductoCollection() {

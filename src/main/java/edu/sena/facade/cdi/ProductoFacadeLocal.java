@@ -29,5 +29,19 @@ public interface ProductoFacadeLocal {
     List<Producto> findRange(int[] range);
 
     int count();
+
+    public List<Producto> leertodos();
+
+    public boolean removerFoto(int fk_productoid, int fk_fotoid);
+
+    public boolean ingresarFoto(int fk_productoid, int fk_fotoid);
+
+    public boolean eliminarProducto(int bod_id);
+
+    public boolean crearProducto(Producto productoIn, int fk_categoria);
+
+    public boolean actualizarProducto(Producto productoIn, int fk_categoria);
+
+    public Producto leerPorId(int proId);
     
 }

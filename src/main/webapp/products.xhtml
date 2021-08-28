@@ -1,7 +1,8 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
@@ -19,8 +20,8 @@
         <link rel="stylesheet" href="assets/css/fontawesome.css"/>
         <link rel="stylesheet" href="assets/css/tooplate-main.css"/>
         <link rel="stylesheet" href="assets/css/owl.css"/>
-        
-        
+
+
         <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
         <meta http-equiv="Pragma" content="no-cache" />
         <meta http-equiv="Expires" content="-1" />
@@ -91,87 +92,43 @@
         <div class="featured container no-gutter">
 
             <div class="row posts">
-                <div id="1" class="item new col-md-4">
-                    <a href="single-product.html">
-                        <div class="featured-item">
-                            <img src="assets/images/product-01.jpg" alt=""/>
-                            <h4>Proin vel ligula</h4>
-                            <h6>$15.00</h6>
+
+
+
+                <c:forEach items="#{categoriaView.leertodos()}"  var="cat">
+
+
+                    <c:forEach items="#{cat.productoCollection}" var="pro" varStatus="act">
+
+                        <div id="#{act.index}" class="item new col-md-4">
+                            <a href="#">
+                                <div class="featured-item">
+                                    <c:forEach var="fto" varStatus="pos" items="#{pro.fotoCollection}">
+                                        <c:if test="#{pos.index == 0}">
+                                            <h:graphicImage
+                                                value="/ImgProServlet/#{fto.fotNombre}">
+                                            </h:graphicImage>
+                                        </c:if>
+                                    </c:forEach>
+                                    <h4>#{cat.catNombre}</h4>
+                                    <h4>#{pro.pdtNombre}</h4>
+                                    <h6>$#{pro.pdtValorventa}</h6>
+                                </div>
+                            </a>
                         </div>
-                    </a>
-                </div>
-                <div id="2" class="item high col-md-4">
-                    <a href="single-product.html">
-                        <div class="featured-item">
-                            <img src="assets/images/product-02.jpg" alt=""/>
-                            <h4>Erat odio rhoncus</h4>
-                            <h6>$25.00</h6>
-                        </div>
-                    </a>
-                </div>
-                <div id="3" class="item low col-md-4">
-                    <a href="single-product.html">
-                        <div class="featured-item">
-                            <img src="assets/images/product-03.jpg" alt=""/>
-                            <h4>Integer vel turpis</h4>
-                            <h6>$35.00</h6>
-                        </div>
-                    </a>
-                </div>
-                <div id="4" class="item low col-md-4">
-                    <a href="single-product.html">
-                        <div class="featured-item">
-                            <img src="assets/images/product-04.jpg" alt=""/>
-                            <h4>Sed purus quam</h4>
-                            <h6>$45.00</h6>
-                        </div>
-                    </a>
-                </div>
-                <div id="5" class="item new high col-md-4">
-                    <a href="single-product.html">
-                        <div class="featured-item">
-                            <img src="assets/images/product-05.jpg" alt=""/>
-                            <h4>Morbi aliquet</h4>
-                            <h6>$55.00</h6>
-                        </div>
-                    </a>
-                </div>
-                <div id="6" class="item new col-md-4">
-                    <a href="single-product.html">
-                        <div class="featured-item">
-                            <img src="assets/images/product-06.jpg" alt=""/>
-                            <h4>Urna ac diam</h4>
-                            <h6>$65.00</h6>
-                        </div>
-                    </a>
-                </div>
-                <div id="7" class="item new high col-md-4">
-                    <a href="single-product.html">
-                        <div class="featured-item">
-                            <img src="assets/images/product-03.jpg" alt=""/>
-                            <h4>Proin eget imperdiet</h4>
-                            <h6>$75.00</h6>
-                        </div>
-                    </a>
-                </div>
-                <div id="8" class="item low new col-md-4">
-                    <a href="single-product.html">
-                        <div class="featured-item">
-                            <img src="assets/images/product-02.jpg" alt=""/>
-                            <h4>Nullam risus nisl</h4>
-                            <h6>$85.00</h6>
-                        </div>
-                    </a>
-                </div>
-                <div id="9" class="item new col-md-4">
-                    <a href="single-product.html">
-                        <div class="featured-item">
-                            <img src="assets/images/product-01.jpg" alt=""/>
-                            <h4>Cras tempus</h4>
-                            <h6>$95.00</h6>
-                        </div>
-                    </a>
-                </div>
+
+
+
+
+                    </c:forEach>
+
+
+                </c:forEach>
+
+
+
+
+
             </div>
         </div>
 
@@ -212,11 +169,11 @@
                                             <fieldset>
                                                 <input name="email" type="text" class="form-control" id="email" 
                                                        onfocus="if (this.value == 'Your Email...') {
-                                    this.value = '';
-                                }" 
+                                                                   this.value = '';
+                                                               }" 
                                                        onBlur="if (this.value == '') {
-                                    this.value = 'Your Email...';
-                                }"
+                                                                   this.value = 'Your Email...';
+                                                               }"
                                                        value="Your Email..." required=""/>
                                             </fieldset>
                                         </div>
@@ -302,14 +259,14 @@
 
 
         <script language = "text/Javascript">
-                                cleared[0] = cleared[1] = cleared[2] = 0; //set a cleared flag for each field
-                                function clearField(t) {                   //declaring the array outside of the
-                                    if (!cleared[t.id]) {                      // function makes it static and global
-                                        cleared[t.id] = 1;  // you could use true and false, but that's more typing
-                                        t.value = '';         // with more chance of typos
-                                        t.style.color = '#fff';
-                                    }
-                                }
+                                                           cleared[0] = cleared[1] = cleared[2] = 0; //set a cleared flag for each field
+                                                           function clearField(t) {                   //declaring the array outside of the
+                                                               if (!cleared[t.id]) {                      // function makes it static and global
+                                                                   cleared[t.id] = 1;  // you could use true and false, but that's more typing
+                                                                   t.value = '';         // with more chance of typos
+                                                                   t.style.color = '#fff';
+                                                               }
+                                                           }
         </script>
 
     </h:body>

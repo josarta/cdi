@@ -236,5 +236,5 @@ public class Usuario implements Serializable {
     public String toString() {
         return "edu.sena.entity.cdi.Usuario[ usuUsuarioid=" + usuUsuarioid + " ]";
     }
-
+    
 }
