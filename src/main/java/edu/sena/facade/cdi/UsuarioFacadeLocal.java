@@ -37,5 +37,7 @@ public interface UsuarioFacadeLocal {
     boolean crearUsuario(Usuario usuIn);
 
     public List<Usuario> leerTodos();
+
+    public Usuario validarSiExiste(String correoIn);
     
 }

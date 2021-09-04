@@ -35,5 +35,7 @@ public interface BodegaFacadeLocal {
     public boolean crearBodega(String bod_nombre, String bod_direccion, String bod_telefono);
 
     public boolean eliminarBodega(int bod_id);
+
+    public Bodega validarSiExiste(String nombreIn);
     
 }

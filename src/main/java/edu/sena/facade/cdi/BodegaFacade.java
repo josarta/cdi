@@ -67,6 +67,18 @@ public class BodegaFacade extends AbstractFacade<Bodega> implements BodegaFacade
     }
     
     
+    @Override
+    public Bodega validarSiExiste(String nombreIn){
+        try {
+            Query q = em.createQuery("SELECT b FROM Bodega b WHERE b.bdgNombre LIKE CONCAT('%',:nombreIn,'%')");
+            q.setParameter("nombreIn", nombreIn);
+            return (Bodega) q.getSingleResult();
+        } catch (Exception e) {
+            return  null;
+        }
+    }
+    
+    
     
     
 }

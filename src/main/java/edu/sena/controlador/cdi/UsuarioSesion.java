@@ -5,15 +5,22 @@
  */
 package edu.sena.controlador.cdi;
 
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import edu.sena.entity.cdi.Bodega;
 import edu.sena.entity.cdi.Usuario;
 import edu.sena.facade.cdi.UsuarioFacadeLocal;
 import edu.sena.utilidades.cdi.Mail;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
@@ -44,6 +51,7 @@ public class UsuarioSesion implements Serializable {
     private Usuario usuTemporal = new Usuario();
     private Part archivoFoto;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+    private Part archivoCarga;
 
     public UsuarioSesion() {
     }
@@ -52,6 +60,103 @@ public class UsuarioSesion implements Serializable {
     public void cargaInicial() {
 
     }
+    
+      public void cargarInicialDatos() {
+        if (archivoCarga != null) {
+            if (archivoCarga.getSize() > 700000) {
+                PrimeFaces.current().executeScript("Swal.fire({"
+                        + "  title: 'El archivo !',"
+                        + "  text: 'No se puede cargar por el tamaño !!!',"
+                        + "  icon: 'error',"
+                        + "  confirmButtonText: 'Ok'"
+                        + "})");
+            } else if (archivoCarga.getContentType().equalsIgnoreCase("application/vnd.ms-excel")) {
+
+                try (InputStream is = archivoCarga.getInputStream()) {
+                    File carpeta = new File("C:\\cdi\\administrador\\archivos");
+                    if (!carpeta.exists()) {
+                        carpeta.mkdirs();
+                    }
+                    Files.copy(is, (new File(carpeta, archivoCarga.getSubmittedFileName())).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    CSVParser conPuntoyComa = new CSVParserBuilder().withSeparator(';').build();
+                    CSVReader reader = new CSVReaderBuilder(new FileReader("C:\\cdi\\administrador\\archivos\\" + archivoCarga.getSubmittedFileName())).withCSVParser(conPuntoyComa).build();
+                    String[] nextline;
+                    while ((nextline = reader.readNext()) != null) {
+                        /*tipoDocumento = nextline[0] 
+                        numeroDocumento= nextline[1] 
+                        nombres= nextline[2] 
+                        apellidos = nextline[3] 
+                        correo = nextline[4] 
+                        clave = nextline[5] 
+                        telefono = nextline[6] 
+                        direccion = nextline[7] 
+                        estado = nextline[8] 
+                        foto = nextline[9] 
+                        ;*/
+
+                        Usuario usuObj = usuarioFacadeLocal.validarSiExiste(nextline[4]);
+                        if (usuObj == null) {
+                            Usuario objNew = new Usuario();
+                            objNew.setUsuTipodocumento(nextline[0]);
+                            objNew.setUsuNumerodocumento(BigInteger.valueOf(Long.parseLong(nextline[1])));
+                            objNew.setUsuNombres(nextline[2]);
+                            objNew.setUsuApellidos(nextline[3]);
+                            objNew.setUsuCorreo(nextline[4]);
+                            objNew.setUsuClave(nextline[5]);
+                            objNew.setUsuTelefono(nextline[6]);
+                            objNew.setUsuDireccion(nextline[7]);
+                            objNew.setUsuEstado(Short.parseShort(nextline[8]));
+                            objNew.setUsuFoto(nextline[9]);                            
+                            usuarioFacadeLocal.crearUsuario(objNew);
+                           
+                        } else {                                
+                            usuObj.setUsuTipodocumento(nextline[0]);
+                            usuObj.setUsuNumerodocumento(BigInteger.valueOf(Long.parseLong(nextline[1])));
+                            usuObj.setUsuNombres(nextline[2]);
+                            usuObj.setUsuApellidos(nextline[3]);
+                            usuObj.setUsuCorreo(nextline[4]);
+                            usuObj.setUsuClave(nextline[5]);
+                            usuObj.setUsuTelefono(nextline[6]);
+                            usuObj.setUsuDireccion(nextline[7]);
+                            usuObj.setUsuEstado(Short.parseShort(nextline[8]));
+                            usuObj.setUsuFoto(nextline[9]);                            
+                            usuarioFacadeLocal.edit(usuObj);
+                        }
+                    }
+                    reader.close();
+
+                } catch (Exception e) {
+                    PrimeFaces.current().executeScript("Swal.fire({"
+                            + "  title: 'Problemas !',"
+                            + "  text: 'No se puede realizar esta accion',"
+                            + "  icon: 'error',"
+                            + "  confirmButtonText: 'Ok'"
+                            + "})");
+                }
+            } else {
+                PrimeFaces.current().executeScript("Swal.fire({"
+                        + "  title: 'El archivo !',"
+                        + "  text: 'No es una imagen .png o .jpeg !!!',"
+                        + "  icon: 'error',"
+                        + "  confirmButtonText: 'Ok'"
+                        + "})");
+            }
+
+        } else {
+            PrimeFaces.current().executeScript("Swal.fire({"
+                    + "  title: 'Problemas !',"
+                    + "  text: 'No se puede realizar esta accion',"
+                    + "  icon: 'error',"
+                    + "  confirmButtonText: 'Ok'"
+                    + "})");
+        }
+
+        PrimeFaces.current().executeScript("document.getElementById('resetform').click()");
+
+    }
+
+    
+    
 
     public void cerrarSesion() throws IOException {
         usuLog = null;
@@ -190,7 +295,7 @@ public class UsuarioSesion implements Serializable {
 
     public void cargarFotoPerfil() {
         if (archivoFoto != null) {
-            if (archivoFoto.getSize() > 700000 || archivoFoto.getSize() < 10000  ) {
+            if (archivoFoto.getSize() > 700000 || archivoFoto.getSize() < 10000) {
                 PrimeFaces.current().executeScript("Swal.fire({"
                         + "  title: 'El archivo !',"
                         + "  text: 'No se puede cargar por el tamaño !!!',"
@@ -198,20 +303,19 @@ public class UsuarioSesion implements Serializable {
                         + "  confirmButtonText: 'Ok'"
                         + "})");
             } else if (archivoFoto.getContentType().equalsIgnoreCase("image/png") || archivoFoto.getContentType().equalsIgnoreCase("image/jpeg")) {
-               
-                
+
                 try (InputStream is = archivoFoto.getInputStream()) {
                     File carpeta = new File("C:\\cdi\\usuarios\\fotoperfil");
                     if (!carpeta.exists()) {
-                     carpeta.mkdirs();
+                        carpeta.mkdirs();
                     }
                     Calendar hoy = Calendar.getInstance();
-                    String nuevoNombre = sdf.format(hoy.getTime())+".";
+                    String nuevoNombre = sdf.format(hoy.getTime()) + ".";
                     nuevoNombre += FilenameUtils.getExtension(archivoFoto.getSubmittedFileName());
-                    Files.copy(is, (new File(carpeta,nuevoNombre)).toPath(),StandardCopyOption.REPLACE_EXISTING);
+                    Files.copy(is, (new File(carpeta, nuevoNombre)).toPath(), StandardCopyOption.REPLACE_EXISTING);
                     usuLog.setUsuFoto(nuevoNombre);
-                    usuarioFacadeLocal.edit(usuLog);                  
-                    
+                    usuarioFacadeLocal.edit(usuLog);
+
                 } catch (Exception e) {
                     PrimeFaces.current().executeScript("Swal.fire({"
                             + "  title: 'Problemas !',"
@@ -237,8 +341,8 @@ public class UsuarioSesion implements Serializable {
                     + "  confirmButtonText: 'Ok'"
                     + "})");
         }
-        
-          PrimeFaces.current().executeScript("document.getElementById('resetform').click()");
+
+        PrimeFaces.current().executeScript("document.getElementById('resetform').click()");
 
     }
 
@@ -325,6 +429,14 @@ public class UsuarioSesion implements Serializable {
 
     public void setArchivoFoto(Part archivoFoto) {
         this.archivoFoto = archivoFoto;
+    }
+
+    public Part getArchivoCarga() {
+        return archivoCarga;
+    }
+
+    public void setArchivoCarga(Part archivoCarga) {
+        this.archivoCarga = archivoCarga;
     }
 
 }

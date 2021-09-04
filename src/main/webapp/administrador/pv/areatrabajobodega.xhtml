@@ -27,6 +27,14 @@
             </div>
             <!-- /.content-header -->
 
+
+            <h:form id="forarchivo" enctype="multipart/form-data">
+                <h:inputFile style="display: none" value="#{bodegaView.archivoCarga}" id="carga" class="btn badge-info" >
+                    <f:ajax render="tablaBodega" listener="#{bodegaView.cargarInicialDatos}" ></f:ajax>
+                </h:inputFile>
+                <button style="display: none" type="reset" id="resetform" class="btn btn-dark">Reset</button>
+            </h:form>
+
             <!-- Main content -->
             <div class="content">
                 <div class="container-fluid">
@@ -39,12 +47,16 @@
                                         <a href="#" class="btn btn-tool btn-sm">
                                             <i data-toggle="modal" data-target="#exampleModal" class="fas fa-ad"></i>
                                         </a>
+                                        <a href="#" onclick="$('#forarchivo\\:carga').click()" class="btn btn-tool btn-sm">
+                                            <i  class="fas fa-address-book"></i>
+                                        </a>
                                         <a href="#" class="btn btn-tool btn-sm">
                                             <i class="fas fa-bars"></i>
                                         </a>
                                     </div>
                                 </div>
                                 <div class="card-body table-responsive p-0">
+                                    <h:panelGroup id="tablaBodega">
                                     <table class="table table-striped table-valign-middle">
                                         <thead>
                                             <tr>
@@ -91,6 +103,7 @@
 
                                         </tbody>
                                     </table>
+                                    </h:panelGroup>
                                 </div>
                             </div>
                             <!-- /.card -->

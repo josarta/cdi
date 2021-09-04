@@ -35,5 +35,7 @@ public interface CategoriaFacadeLocal {
     public boolean crearCategoria(String cat_nombre, String cat_descripcion);
 
     public boolean eliminarCategoria(int cat_id);
+
+    public Categoria validarSiExiste(String nombreIn);
     
 }

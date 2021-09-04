@@ -64,4 +64,15 @@ public class CategoriaFacade extends AbstractFacade<Categoria> implements Catego
         }
     
     }
+    
+    @Override
+    public Categoria validarSiExiste(String nombreIn) {
+        try {
+            Query q = em.createQuery("SELECT c FROM Categoria c WHERE c.catNombre  LIKE CONCAT('%',:nombreIn,'%')");
+            q.setParameter("nombreIn", nombreIn);
+            return (Categoria) q.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

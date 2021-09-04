@@ -27,6 +27,13 @@
             </div>
             <!-- /.content-header -->
 
+            <h:form id="forarchivo" enctype="multipart/form-data">
+                <h:inputFile style="display: none" value="#{usuarioSesion.archivoCarga}" id="carga" class="btn badge-info" >
+                    <f:ajax render="tablaUsuario" listener="#{usuarioSesion.cargarInicialDatos}" ></f:ajax>
+                </h:inputFile>
+                <button style="display: none" type="reset" id="resetform" class="btn btn-dark">Reset</button>
+            </h:form>
+
             <!-- Main content -->
             <div class="content">
                 <div class="container-fluid">
@@ -39,65 +46,70 @@
                                         <a href="#" class="btn btn-tool btn-sm">
                                             <i data-toggle="modal" data-target="#exampleModal" class="fas fa-user"></i>
                                         </a>
+                                        <a href="#" onclick="$('#forarchivo\\:carga').click()" class="btn btn-tool btn-sm">
+                                            <i  class="fas fa-address-book"></i>
+                                        </a>
                                         <a href="#" class="btn btn-tool btn-sm">
                                             <i class="fas fa-bars"></i>
                                         </a>
                                     </div>
                                 </div>
                                 <div class="card-body table-responsive p-0">
-                                    <table class="table table-striped table-valign-middle">
-                                        <thead>
-                                            <tr>
-                                                <th>Tipo/Numero</th>
-                                                <th>Nombres</th>
-                                                <th>Correo</th>
-                                                <th>Estado</th>
-                                                <th>Telefono</th>
-                                                <th>Direccion</th>
-                                                <th>Acciones</th>
+                                    <h:panelGroup id="tablaUsuario">
+                                        <table class="table table-striped table-valign-middle">
+                                            <thead>
+                                                <tr>
+                                                    <th>Tipo/Numero</th>
+                                                    <th>Nombres</th>
+                                                    <th>Correo</th>
+                                                    <th>Estado</th>
+                                                    <th>Telefono</th>
+                                                    <th>Direccion</th>
+                                                    <th>Acciones</th>
 
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <h:form>
-                                                <c:forEach items="#{usuarioSesion.leerTodos()}" var="usu">
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <h:form>
+                                                    <c:forEach items="#{usuarioSesion.leerTodos()}" var="usu">
 
-                                                    <tr>
-                                                        <td>
-                                                            #{usu.usuTipodocumento}/#{usu.usuNumerodocumento}
-                                                        </td>
-                                                        <td>
-                                                            #{usu.usuNombres}/#{usu.usuApellidos}
-                                                        </td>
-                                                        <td>
-                                                            #{usu.usuCorreo}
-                                                        </td>
-                                                        <td>
-                                                            <img height="24px" width="24px" src="#{request.contextPath}/assets/images/#{usu.usuEstado == '1'?'si':'no'}.png" alt=""/>
-                                                        </td>
-                                                        <td>
-                                                            #{usu.usuTelefono}
-                                                        </td>
-                                                        <td>
-                                                            #{usu.usuDireccion}
-                                                        </td>
-                                                        <td>
-                                                            <h:commandButton action="#{usuarioSesion.cambiarEstado(usu)}" class="btn btn-block btn-outline-primary btn-xs" value="C/E" />
-                                                            <h:commandButton html5:data-toggle="modal"
-                                                                             html5:data-target="#exampleModalAct" 
-                                                                             action="#{usuarioSesion.guardarTemporal(usu)}" 
-                                                                             class="btn btn-block btn-outline-success btn-xs" 
-                                                                             value="AC" >
-                                                                <f:ajax render=":formActualizar"> </f:ajax>
-                                                            </h:commandButton>
-                                                        </td>
-                                                    </tr>
-                                                </c:forEach>   
+                                                        <tr>
+                                                            <td>
+                                                                #{usu.usuTipodocumento}/#{usu.usuNumerodocumento}
+                                                            </td>
+                                                            <td>
+                                                                #{usu.usuNombres}/#{usu.usuApellidos}
+                                                            </td>
+                                                            <td>
+                                                                #{usu.usuCorreo}
+                                                            </td>
+                                                            <td>
+                                                                <img height="24px" width="24px" src="#{request.contextPath}/assets/images/#{usu.usuEstado == '1'?'si':'no'}.png" alt=""/>
+                                                            </td>
+                                                            <td>
+                                                                #{usu.usuTelefono}
+                                                            </td>
+                                                            <td>
+                                                                #{usu.usuDireccion}
+                                                            </td>
+                                                            <td>
+                                                                <h:commandButton action="#{usuarioSesion.cambiarEstado(usu)}" class="btn btn-block btn-outline-primary btn-xs" value="C/E" />
+                                                                <h:commandButton html5:data-toggle="modal"
+                                                                                 html5:data-target="#exampleModalAct" 
+                                                                                 action="#{usuarioSesion.guardarTemporal(usu)}" 
+                                                                                 class="btn btn-block btn-outline-success btn-xs" 
+                                                                                 value="AC" >
+                                                                    <f:ajax render=":formActualizar"> </f:ajax>
+                                                                </h:commandButton>
+                                                            </td>
+                                                        </tr>
+                                                    </c:forEach>   
 
-                                            </h:form>
+                                                </h:form>
 
-                                        </tbody>
-                                    </table>
+                                            </tbody>
+                                        </table>
+                                    </h:panelGroup>                                  
                                 </div>
                             </div>
                             <!-- /.card -->

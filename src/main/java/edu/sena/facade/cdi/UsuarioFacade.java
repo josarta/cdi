@@ -82,5 +82,16 @@ public class UsuarioFacade extends AbstractFacade<Usuario> implements UsuarioFac
             return null;
         }
     }
+    
+       @Override
+    public Usuario validarSiExiste(String correoIn){
+        try {
+            Query q = em.createQuery("SELECT u FROM Usuario u WHERE u.usuCorreo  LIKE CONCAT('%',:correoIn,'%')");
+            q.setParameter("correoIn", correoIn);
+            return (Usuario) q.getSingleResult();
+        } catch (Exception e) {
+            return  null;
+        }
+    }
 
 }
