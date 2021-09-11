@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="285277a9-49ad-4b26-b6b6-3d38b350feb6">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[SELECT bdg_bodegaid  as 'Serial', bdg_nombre as 'Nombre' , bdg_direccion as 'Direccion', bdg_telefono as 'Telefono'  FROM dbs_cdi.tbl_bodega;]]>
+	</queryString>
+	<field name="Serial" class="java.lang.Integer"/>
+	<field name="Nombre" class="java.lang.String"/>
+	<field name="Direccion" class="java.lang.String"/>
+	<field name="Telefono" class="java.lang.Integer"/>
+	<background>
+		<band height="802">
+			<image>
+				<reportElement x="26" y="63" width="513" height="626" uuid="8b1d3a1a-dd48-4d59-8810-8b03bf33a12c"/>
+				<imageExpression><![CDATA["C:\\Users\\Josarta\\Documents\\NetBeansProjects\\cdi\\src\\main\\webapp\\reportes\\ma.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="63" y="6" width="332" height="62" uuid="00374304-926d-433e-8d5c-87053b550177"/>
+				<textElement>
+					<font fontName="Bradley Hand ITC" size="46"/>
+				</textElement>
+				<text><![CDATA[CDI - Bodegas]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="0" y="6" width="52" height="50" uuid="bcfaa241-602c-4268-acbd-32f152a564fb"/>
+				<jr:DataMatrix xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" textPosition="bottom">
+					<jr:codeExpression><![CDATA[2124470]]></jr:codeExpression>
+				</jr:DataMatrix>
+			</componentElement>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="24" splitType="Stretch">
+			<staticText>
+				<reportElement x="26" y="1" width="100" height="20" uuid="9572254c-d83d-49b9-8686-6e6cafe13012"/>
+				<text><![CDATA[Serial]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="141" y="1" width="100" height="20" uuid="6e1e1df8-1504-43eb-92cc-c30c7c2dbeca"/>
+				<text><![CDATA[Nombre]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="270" y="1" width="100" height="20" uuid="3a38f066-e2f3-4635-952b-192b75ed0bde"/>
+				<text><![CDATA[Direccion]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="404" y="1" width="100" height="20" uuid="0338bd67-904d-4103-bfa9-b8d8834ac0d0"/>
+				<text><![CDATA[Telefono]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="24" splitType="Stretch">
+			<textField>
+				<reportElement x="26" y="2" width="100" height="20" uuid="fddc62dd-886f-4ca9-93b0-5c0d4479f3af"/>
+				<textFieldExpression><![CDATA[$F{Serial}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="141" y="2" width="100" height="20" uuid="d5fdbf2a-eff0-4aad-b8a1-18f704fed499"/>
+				<textFieldExpression><![CDATA[$F{Nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="270" y="2" width="100" height="20" uuid="ed802e97-2b3d-4dd4-ae12-aa425a3d727a"/>
+				<textFieldExpression><![CDATA[$F{Direccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="404" y="2" width="100" height="20" uuid="281d1db5-3c5b-4b63-8472-adea2197356a"/>
+				<textFieldExpression><![CDATA[$F{Telefono}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="26">
+			<textField>
+				<reportElement x="455" y="3" width="100" height="20" uuid="892bc5b8-c0df-4823-b09d-4ffe8c76cc91"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

@@ -42,6 +42,10 @@
                             <div class="card">
                                 <div class="card-header border-0">
                                     <h3 class="card-title">Usuarios</h3>
+                                    <h:form>
+                                        <h:commandButton action="#{usuarioSesion.generarArchivo('pdf','')}"  class=" ml-2 btn btn-sm btn-success" value=".pdf"></h:commandButton>
+                                        <h:commandButton action="#{usuarioSesion.generarArchivo('xlsx','')}"  class=" ml-2 btn btn-sm btn-success" value=".xlsx"></h:commandButton>
+                                    </h:form>
                                     <div class="card-tools">
                                         <a href="#" class="btn btn-tool btn-sm">
                                             <i data-toggle="modal" data-target="#exampleModal" class="fas fa-user"></i>
@@ -101,6 +105,7 @@
                                                                                  value="AC" >
                                                                     <f:ajax render=":formActualizar"> </f:ajax>
                                                                 </h:commandButton>
+                                                                 <h:commandButton action="#{usuarioSesion.generarArchivo('pdf',usu.usuNumerodocumento)}"  class="btn btn-block btn-outline-success btn-xs" value=".pdf"></h:commandButton>
                                                             </td>
                                                         </tr>
                                                     </c:forEach>   

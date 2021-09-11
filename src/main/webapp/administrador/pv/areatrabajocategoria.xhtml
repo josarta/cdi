@@ -26,9 +26,9 @@
                 </div><!-- /.container-fluid -->
             </div>
             <!-- /.content-header -->
-            
-             <h:form id="forarchivo" enctype="multipart/form-data">
-                 <h:inputFile style="display: none" value="#{categoriaView.archivoCarga}" id="carga" class="btn badge-info" >
+
+            <h:form id="forarchivo" enctype="multipart/form-data">
+                <h:inputFile style="display: none" value="#{categoriaView.archivoCarga}" id="carga" class="btn badge-info" >
                     <f:ajax render="tablaCategoria" listener="#{categoriaView.cargarInicialDatos}" ></f:ajax>
                 </h:inputFile>
                 <button style="display: none" type="reset" id="resetform" class="btn btn-dark">Reset</button>
@@ -42,6 +42,11 @@
                             <div class="card">
                                 <div class="card-header border-0">
                                     <h3 class="card-title">Gestion categorias</h3>
+                                    <h:form>
+                                        <h:commandButton action="#{categoriaView.generarArchivo('pdf')}"  class=" ml-2 btn btn-sm btn-dark" value=".pdf"></h:commandButton>
+                                        <h:commandButton action="#{categoriaView.generarArchivo('xlsx')}"  class=" ml-2 btn btn-sm btn-dark" value=".xlsx"></h:commandButton>
+                                        <h:commandButton action="#{categoriaView.generarArchivo('docx')}"  class=" ml-2 btn btn-sm btn-dark" value=".docx"></h:commandButton>
+                                    </h:form>
                                     <div class="card-tools">
                                         <a href="#" class="btn btn-tool btn-sm">
                                             <i data-toggle="modal" data-target="#exampleModal" class="fas fa-ad"></i>
@@ -56,47 +61,49 @@
                                 </div>
                                 <div class="card-body table-responsive p-0">
                                     <h:panelGroup id="tablaCategoria">
-                                    <table class="table table-striped table-valign-middle">
-                                        <thead>
-                                            <tr>
-                                                <th>Serial</th>
-                                                <th>Nombre</th>
-                                                <th>Descripcion</th>
-                                                <th>Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <h:form>
-                                                <c:forEach items="#{categoriaView.leertodos()}" var="cat">
+                                        <table class="table table-striped table-valign-middle">
+                                            <thead>
+                                                <tr>
+                                                    <th>Serial</th>
+                                                    <th>Nombre</th>
+                                                    <th>Descripcion</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <h:form>
+                                                    <c:forEach items="#{categoriaView.leertodos()}" var="cat">
 
-                                                    <tr>
-                                                        <td>
-                                                            #{cat.catCategoriaid}
-                                                        </td>
-                                                        <td>
-                                                            #{cat.catNombre}
-                                                        </td>
-                                                        <td>
-                                                            #{cat.catDescripcion}
-                                                        </td>
-                                                        <td>
-                                                            <h:commandButton action="#{categoriaView.eliminarCategoria(cat)}" class="btn btn-danger" style="margin-right: 10px;" value="E">
-                                                            </h:commandButton>
-                                                             <h:commandButton html5:data-toggle="modal"
-                                                                             html5:data-target="#exampleModalAct" 
-                                                                             action="#{categoriaView.guardarTemporal(cat)}" 
-                                                                             class="btn btn-success" 
-                                                                             value="AC" >
-                                                                <f:ajax render=":formActualizar"> </f:ajax>
-                                                            </h:commandButton>
-                                                        </td>
-                                                    </tr>
-                                                </c:forEach>   
+                                                        <tr>
+                                                            <td>
+                                                                #{cat.catCategoriaid}
+                                                            </td>
+                                                            <td>
+                                                                #{cat.catNombre}
+                                                            </td>
+                                                            <td>
+                                                                #{cat.catDescripcion}
+                                                            </td>
+                                                            <td>
+                                                                <h:commandButton action="#{categoriaView.eliminarCategoria(cat)}" class="btn btn-danger" style="margin-right: 10px;" value="E">
+                                                                </h:commandButton>
+                                                                <h:commandButton html5:data-toggle="modal"
+                                                                                 html5:data-target="#exampleModalAct" 
+                                                                                 action="#{categoriaView.guardarTemporal(cat)}" 
+                                                                                 class="btn btn-success" 
+                                                                                 value="AC" >
+                                                                    <f:ajax render=":formActualizar"> </f:ajax>
+                                                                </h:commandButton>
 
-                                            </h:form>
 
-                                        </tbody>
-                                    </table>
+                                                            </td>
+                                                        </tr>
+                                                    </c:forEach>   
+
+                                                </h:form>
+
+                                            </tbody>
+                                        </table>
                                     </h:panelGroup>
                                 </div>
                             </div>

@@ -17,19 +17,39 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.ejb.EJB;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+import javax.sql.DataSource;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
+import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
+import net.sf.jasperreports.export.SimpleDocxExporterConfiguration;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 import org.primefaces.PrimeFaces;
 import org.primefaces.shaded.commons.io.FilenameUtils;
 
@@ -43,6 +63,9 @@ public class UsuarioSesion implements Serializable {
 
     @EJB
     UsuarioFacadeLocal usuarioFacadeLocal;
+
+    @Resource(lookup = "java:app/dbs_cdi")
+    DataSource dataSource;
 
     private String correoIn;
     private String claveIn;
@@ -60,8 +83,81 @@ public class UsuarioSesion implements Serializable {
     public void cargaInicial() {
 
     }
-    
-      public void cargarInicialDatos() {
+
+    public void generarArchivo(String tipoArchivo, String documentoIn) throws JRException, IOException {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ExternalContext context = facesContext.getExternalContext();
+        HttpServletResponse response = (HttpServletResponse) context.getResponse();
+        String nombreReporte = "";
+        try {
+            Map parametros = new HashMap();
+            if (!documentoIn.isEmpty()) {
+                parametros.put("documentoIn", documentoIn);
+                nombreReporte = "diploma";
+            } else {
+                nombreReporte = "usuarios";
+            }
+
+            File jasper = new File(context.getRealPath("/reportes/"+nombreReporte+".jasper"));
+
+            JasperPrint jp = JasperFillManager.fillReport(jasper.getPath(), parametros, dataSource.getConnection());
+            switch (tipoArchivo) {
+                case "pdf":
+                    response.setContentType("application/pdf");
+                    response.addHeader("Content-disposition", "attachment; filename=Lista usuarios.pdf");
+                    OutputStream os = response.getOutputStream();
+                    JasperExportManager.exportReportToPdfStream(jp, os);
+                    os.flush();
+                    os.close();
+                    break;
+
+                case "xlsx":
+                    response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                    response.addHeader("Content-disposition", "attachment; filename=Lista usuarios.xlsx");
+
+                    JRXlsxExporter exporter = new JRXlsxExporter(); // initialize exporter 
+                    exporter.setExporterInput(new SimpleExporterInput(jp)); // set compiled report as input
+                    exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(response.getOutputStream()));
+
+                    SimpleXlsxReportConfiguration configuration = new SimpleXlsxReportConfiguration();
+                    configuration.setOnePagePerSheet(true); // setup configuration
+                    configuration.setDetectCellType(true);
+                    configuration.setSheetNames(new String[]{"Bodegas"});
+                    exporter.setConfiguration(configuration); // set configuration    
+                    exporter.exportReport();
+                    break;
+
+                case "docx":
+                    response.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+                    response.addHeader("Content-disposition", "attachment; filename=Lista usuarios.docx");
+
+                    JRDocxExporter exporterDoc = new JRDocxExporter(); // initialize exporter 
+                    exporterDoc.setExporterInput(new SimpleExporterInput(jp)); // set compiled report as input
+                    exporterDoc.setExporterOutput(new SimpleOutputStreamExporterOutput(response.getOutputStream()));
+
+                    SimpleDocxExporterConfiguration configurationDoc = new SimpleDocxExporterConfiguration();
+                    configurationDoc.setMetadataAuthor("Jose Luis Sarta A."); // setup configuration
+                    configurationDoc.setMetadataTitle("Reporte de usuarios");
+                    configurationDoc.setMetadataSubject("Listado de usuarios");
+
+                    exporterDoc.setConfiguration(configurationDoc); // set configuration    
+                    exporterDoc.exportReport();
+                    break;
+
+                default:
+                    System.err.println(" No se encontro este caso :: CategoriaView::generarArchivo");
+                    break;
+
+            }
+            facesContext.responseComplete();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(CategoriaView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void cargarInicialDatos() {
         if (archivoCarga != null) {
             if (archivoCarga.getSize() > 700000) {
                 PrimeFaces.current().executeScript("Swal.fire({"
@@ -106,10 +202,10 @@ public class UsuarioSesion implements Serializable {
                             objNew.setUsuTelefono(nextline[6]);
                             objNew.setUsuDireccion(nextline[7]);
                             objNew.setUsuEstado(Short.parseShort(nextline[8]));
-                            objNew.setUsuFoto(nextline[9]);                            
+                            objNew.setUsuFoto(nextline[9]);
                             usuarioFacadeLocal.crearUsuario(objNew);
-                           
-                        } else {                                
+
+                        } else {
                             usuObj.setUsuTipodocumento(nextline[0]);
                             usuObj.setUsuNumerodocumento(BigInteger.valueOf(Long.parseLong(nextline[1])));
                             usuObj.setUsuNombres(nextline[2]);
@@ -119,7 +215,7 @@ public class UsuarioSesion implements Serializable {
                             usuObj.setUsuTelefono(nextline[6]);
                             usuObj.setUsuDireccion(nextline[7]);
                             usuObj.setUsuEstado(Short.parseShort(nextline[8]));
-                            usuObj.setUsuFoto(nextline[9]);                            
+                            usuObj.setUsuFoto(nextline[9]);
                             usuarioFacadeLocal.edit(usuObj);
                         }
                     }
@@ -154,9 +250,6 @@ public class UsuarioSesion implements Serializable {
         PrimeFaces.current().executeScript("document.getElementById('resetform').click()");
 
     }
-
-    
-    
 
     public void cerrarSesion() throws IOException {
         usuLog = null;

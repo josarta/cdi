@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b6a0ecc5-c429-4ac6-b439-adc355d45889">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="documentoIn" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="correoIn" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT usu_tipodocumento , usu_numerodocumento ,usu_nombres , usu_apellidos , usu_correo  FROM tbl_usuario WHERE usu_numerodocumento = $P{documentoIn} AND usu_correo = $P{correoIn}]]>
+	</queryString>
+	<field name="usu_tipodocumento" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="usu_numerodocumento" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="usu_nombres" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="usu_apellidos" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="usu_correo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band height="555">
+			<image>
+				<reportElement x="10" y="0" width="773" height="555" uuid="fcf65758-bae2-458d-9d10-5d150fcba85e"/>
+				<imageExpression><![CDATA["C:\\Users\\Josarta\\Documents\\NetBeansProjects\\cdi\\src\\main\\webapp\\reportes\\diploma.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<detail>
+		<band height="452" splitType="Stretch">
+			<textField>
+				<reportElement x="539" y="364" width="115" height="33" uuid="9ddcc2ff-c336-4e0e-8e20-f4e75b84e729"/>
+				<textElement>
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{usu_tipodocumento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="604" y="364" width="129" height="33" uuid="f9062cc1-104b-419a-9435-1c1dbce28635"/>
+				<textElement>
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{usu_numerodocumento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="202" y="188" width="179" height="72" uuid="603ed542-0044-4618-ae25-aef4dff18a5d"/>
+				<textElement>
+					<font fontName="Bradley Hand ITC" size="28"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{usu_nombres}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="381" y="188" width="158" height="72" uuid="483d667e-39bf-4649-8996-1604947aec8a"/>
+				<textElement>
+					<font fontName="Bradley Hand ITC" size="26"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{usu_apellidos}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

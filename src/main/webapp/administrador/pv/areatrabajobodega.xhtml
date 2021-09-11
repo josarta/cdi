@@ -43,6 +43,11 @@
                             <div class="card">
                                 <div class="card-header border-0">
                                     <h3 class="card-title">Gestion bodegas</h3>
+                                    <h:form>
+                                        <h:commandButton action="#{bodegaView.generarArchivo('pdf')}"  class=" ml-2 btn btn-sm btn-dark" value=".pdf"></h:commandButton>
+                                        <h:commandButton action="#{bodegaView.generarArchivo('xlsx')}"  class=" ml-2 btn btn-sm btn-dark" value=".xlsx"></h:commandButton>
+                                        <h:commandButton action="#{bodegaView.generarArchivo('docx')}"  class=" ml-2 btn btn-sm btn-dark" value=".docx"></h:commandButton>
+                                    </h:form>
                                     <div class="card-tools">
                                         <a href="#" class="btn btn-tool btn-sm">
                                             <i data-toggle="modal" data-target="#exampleModal" class="fas fa-ad"></i>
@@ -57,52 +62,52 @@
                                 </div>
                                 <div class="card-body table-responsive p-0">
                                     <h:panelGroup id="tablaBodega">
-                                    <table class="table table-striped table-valign-middle">
-                                        <thead>
-                                            <tr>
-                                                <th>Serial</th>
-                                                <th>Nombre</th>
-                                                <th>Direccion</th>
-                                                <th>Telefono</th>
-                                                <th>Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <h:form>
-                                                <c:forEach items="#{bodegaView.leertodos()}" var="bod">
+                                        <table class="table table-striped table-valign-middle">
+                                            <thead>
+                                                <tr>
+                                                    <th>Serial</th>
+                                                    <th>Nombre</th>
+                                                    <th>Direccion</th>
+                                                    <th>Telefono</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <h:form>
+                                                    <c:forEach items="#{bodegaView.leertodos()}" var="bod">
 
-                                                    <tr>
-                                                        <td>
-                                                            #{bod.bdgBodegaid}
-                                                        </td>
-                                                        <td>
-                                                            #{bod.bdgNombre}
-                                                        </td>
-                                                        <td>
-                                                            #{bod.bdgDireccion}
-                                                        </td>
-                                                        <td>
-                                                            #{bod.bdgTelefono}
-                                                        </td>
+                                                        <tr>
+                                                            <td>
+                                                                #{bod.bdgBodegaid}
+                                                            </td>
+                                                            <td>
+                                                                #{bod.bdgNombre}
+                                                            </td>
+                                                            <td>
+                                                                #{bod.bdgDireccion}
+                                                            </td>
+                                                            <td>
+                                                                #{bod.bdgTelefono}
+                                                            </td>
 
-                                                        <td>
-                                                            <h:commandButton action="#{bodegaView.eliminarBodega(bod)}" class="btn btn-danger" style="margin-right: 10px;" value="E">
-                                                            </h:commandButton>
-                                                            <h:commandButton html5:data-toggle="modal"
-                                                                             html5:data-target="#exampleModalAct" 
-                                                                             action="#{bodegaView.guardarTemporal(bod)}" 
-                                                                             class="btn btn-success" 
-                                                                             value="AC" >
-                                                                <f:ajax render=":formActualizar"> </f:ajax>
-                                                            </h:commandButton>
-                                                        </td>
-                                                    </tr>
-                                                </c:forEach>   
+                                                            <td>
+                                                                <h:commandButton action="#{bodegaView.eliminarBodega(bod)}" class="btn btn-danger" style="margin-right: 10px;" value="E">
+                                                                </h:commandButton>
+                                                                <h:commandButton html5:data-toggle="modal"
+                                                                                 html5:data-target="#exampleModalAct" 
+                                                                                 action="#{bodegaView.guardarTemporal(bod)}" 
+                                                                                 class="btn btn-success" 
+                                                                                 value="AC" >
+                                                                    <f:ajax render=":formActualizar"> </f:ajax>
+                                                                </h:commandButton>
+                                                            </td>
+                                                        </tr>
+                                                    </c:forEach>   
 
-                                            </h:form>
+                                                </h:form>
 
-                                        </tbody>
-                                    </table>
+                                            </tbody>
+                                        </table>
                                     </h:panelGroup>
                                 </div>
                             </div>
