@@ -89,13 +89,17 @@ public class UsuarioSesion implements Serializable {
         ExternalContext context = facesContext.getExternalContext();
         HttpServletResponse response = (HttpServletResponse) context.getResponse();
         String nombreReporte = "";
+        String nombreReporteDescarga = "";
+        
         try {
             Map parametros = new HashMap();
             if (!documentoIn.isEmpty()) {
                 parametros.put("documentoIn", documentoIn);
                 nombreReporte = "diploma";
+                nombreReporteDescarga = "Mi Diploma";
             } else {
                 nombreReporte = "usuarios";
+                nombreReporteDescarga = "Lista Usuarios";        
             }
 
             File jasper = new File(context.getRealPath("/reportes/"+nombreReporte+".jasper"));
@@ -104,7 +108,7 @@ public class UsuarioSesion implements Serializable {
             switch (tipoArchivo) {
                 case "pdf":
                     response.setContentType("application/pdf");
-                    response.addHeader("Content-disposition", "attachment; filename=Lista usuarios.pdf");
+                    response.addHeader("Content-disposition", "attachment; filename="+nombreReporte+".pdf");
                     OutputStream os = response.getOutputStream();
                     JasperExportManager.exportReportToPdfStream(jp, os);
                     os.flush();
