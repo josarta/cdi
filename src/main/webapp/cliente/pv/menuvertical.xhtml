@@ -57,6 +57,29 @@
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>#{rol.rolNombre}</p>
                                         </a>
+                                        
+                                         <c:if test="#{rol.rolNombre.equalsIgnoreCase('cliente')}">
+                                            <ul class="nav nav-treeview">
+                                            <li class="nav-item">
+                                                <a href="index.xhtml" class="nav-link">
+                                                    <i class="far fa-xbox nav-icon"></i>
+                                                    <p>Stock</p>
+                                                </a>
+                                            </li>
+                                             <li class="nav-item">
+                                                <a href="carrito.xhtml" class="nav-link">
+                                                    <i class="far fa-xbox nav-icon"></i>
+                                                    <p>Carrito de compras</p>
+                                                </a>
+                                            </li>
+                                                 <li class="nav-item">
+                                                <a href="historico.xhtml" class="nav-link">
+                                                    <i class="far fa-xbox nav-icon"></i>
+                                                    <p>Historico de compras</p>
+                                                </a>
+                                            </li>
+                                        </ul>                                            
+                                        </c:if>
                                     </li>
                                 </c:forEach>
                             </ul>

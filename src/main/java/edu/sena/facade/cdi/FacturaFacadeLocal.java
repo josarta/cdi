@@ -29,5 +29,7 @@ public interface FacturaFacadeLocal {
     List<Factura> findRange(int[] range);
 
     int count();
+
+    public boolean crearFactura(int fk_vendedor, int fk_cliente, int fac_totalproductos, double fac_valortotal, double fac_impuestos, String fac_dirrecionentrega, String fac_telefono, String fac_ciudad);
     
 }
